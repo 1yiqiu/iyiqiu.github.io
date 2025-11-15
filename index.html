@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>羽秋工作室 - 个人简介</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 200vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            color: #fff;
+        }
+
+        /* 渐变边框头像容器 */
+        .avatar-container {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            margin: 30px 0;
+            transition: transform 0.5s ease;
+            z-index: 10;
+        }
+
+        .avatar-border {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            padding: 4px;
+            background: linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899, #06b6d4);
+            background-size: 200% 200%;
+            animation: gradientRotate 4s linear infinite;
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+        }
+
+        .avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid #1e293b;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 自我介绍容器 */
+        .intro-container {
+            width: 90%;
+            max-width: 400px;
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            opacity: 0.8;
+            transform: translateY(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .intro-container h2 {
+            color: #f0f9ff;
+            font-size: 22px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .intro-content {
+            color: #e2e8f0;
+            line-height: 1.8;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        /* 服务器状态模块 */
+        .server-status {
+            width: 90%;
+            max-width: 400px;
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .server-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .server-header h3 {
+            font-size: 18px;
+            color: #06b6d4;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: blink 2s infinite;
+        }
+
+        .server-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .metric-item {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #f0f9ff;
+        }
+
+        .progress-container {
+            margin-bottom: 15px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #94a3b8;
+            margin-bottom: 6px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #6366f1, #06b6d4);
+            width: 78%;
+            animation: progressPulse 3s infinite alternate;
+        }
+
+        .progress-fill-cpu {
+            width: 45%;
+            animation: progressPulse 2s infinite alternate;
+        }
+
+        .progress-fill-db {
+            width: 62%;
+            animation: progressPulse 2.5s infinite alternate;
+        }
+
+        .server-ips {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #e2e8f0;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* 滚动动效 */
+        body.scrolled .avatar-container {
+            transform: scale(0.9);
+        }
+
+        body.scrolled .intro-container {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        body.scrolled .server-status {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 动画效果 */
+        @keyframes gradientRotate {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes progressPulse {
+            0% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+
+        /* 数字跳动动画 */
+        @keyframes countUp {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .metric-value {
+            animation: countUp 1s ease forwards;
+        }
+
+        /* 手机适配优化 */
+        @media (max-width: 375px) {
+            .avatar-container {
+                width: 150px;
+                height: 150px;
+            }
+            .intro-container, .server-status {
+                padding: 20px;
+            }
+            .intro-content {
+                font-size: 15px;
+            }
+            .server-metrics {
+                gap: 10px;
+            }
+            .metric-value {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头像区域 -->
+    <div class="avatar-container">
+        <div class="avatar-border">
+            <div class="avatar">
+                <img src="d4379e1d103635f2673
